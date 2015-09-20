@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
     OstrichChat mainWindow;
 
-    mainWindow.show();
+    mainWindow.initialize();
 
     exitCode = application.exec();
 

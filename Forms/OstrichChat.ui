@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OstrichChatClass</class>
- <widget class="QMainWindow" name="OstrichChatClass">
+ <class>OstrichChatWindow</class>
+ <widget class="QMainWindow" name="OstrichChatWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -84,7 +84,7 @@
   <connection>
    <sender>actionExit</sender>
    <signal>triggered()</signal>
-   <receiver>OstrichChatClass</receiver>
+   <receiver>OstrichChatWindow</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
