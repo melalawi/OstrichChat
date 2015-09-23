@@ -36,6 +36,8 @@
     <property name="title">
      <string>OstrichChat</string>
     </property>
+    <addaction name="actionConnectToChannel"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -73,6 +75,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionConnectToChannel">
+   <property name="text">
+    <string>Connect to Channel</string>
    </property>
   </action>
  </widget>

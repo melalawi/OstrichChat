@@ -28,6 +28,7 @@ class Ui_OstrichChatWindow
 public:
     QAction *actionExit;
     QAction *actionAbout;
+    QAction *actionConnectToChannel;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuOstrichChat;
@@ -46,6 +47,8 @@ public:
         actionExit->setIconVisibleInMenu(false);
         actionAbout = new QAction(OstrichChatWindow);
         actionAbout->setObjectName(QStringLiteral("actionAbout"));
+        actionConnectToChannel = new QAction(OstrichChatWindow);
+        actionConnectToChannel->setObjectName(QStringLiteral("actionConnectToChannel"));
         centralWidget = new QWidget(OstrichChatWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         OstrichChatWindow->setCentralWidget(centralWidget);
@@ -67,6 +70,8 @@ public:
 
         menuBar->addAction(menuOstrichChat->menuAction());
         menuBar->addAction(menuHelp->menuAction());
+        menuOstrichChat->addAction(actionConnectToChannel);
+        menuOstrichChat->addSeparator();
         menuOstrichChat->addAction(actionExit);
         menuHelp->addAction(actionAbout);
 
@@ -82,6 +87,7 @@ public:
         actionExit->setText(QApplication::translate("OstrichChatWindow", "Exit", 0));
         actionExit->setIconText(QApplication::translate("OstrichChatWindow", "Exit", 0));
         actionAbout->setText(QApplication::translate("OstrichChatWindow", "About", 0));
+        actionConnectToChannel->setText(QApplication::translate("OstrichChatWindow", "Connect to Channel", 0));
         menuOstrichChat->setTitle(QApplication::translate("OstrichChatWindow", "OstrichChat", 0));
         menuHelp->setTitle(QApplication::translate("OstrichChatWindow", "Help", 0));
         toolBar->setWindowTitle(QApplication::translate("OstrichChatWindow", "toolBar", 0));

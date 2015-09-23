@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <QWidget>
-#include <QtNetwork>
+
+#include "../Core/ChannelConnection.h"
 
 #include "ui_ChannelWidget.h"
 
@@ -12,13 +12,18 @@ class ChannelWidget : public QWidget {
 private:
     Ui::ChannelWidget ui;
 
-    QTcpSocket *channelSocket;
+    QString channelName;
+    ChannelConnection *channelConnection;
 
+    void assignSlots();
 public:
-    ChannelWidget(QWidget *parent = 0);
+    ChannelWidget(const QString& channel, QWidget *parent = 0);
     ~ChannelWidget();
 
-    void readData();
-    void connectToServer();
-    void disconnectFromServer();
+    void connectToChannel();
+    void disconnectFromChannel();
+
+private slots:
+    void sendMessage();
+    void receiveMessage(const QString& message);
 };

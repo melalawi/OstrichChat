@@ -1,21 +1,29 @@
 #pragma once
 
 #include <QWidget>
-#include "ui_OstrichChat.h" // Point this to the parent folder for some reason
+#include "ui_OstrichChat.h"
+
+#include "ConnectDialog.h"
 
 class OstrichChat : public QMainWindow {
     Q_OBJECT
 
 private:
     Ui::OstrichChatWindow ui;
-    QTabWidget *masterTabWidget;
 
-    void launchConnectPopup();
+    QTabWidget *masterTabWidget = nullptr;
+    ConnectDialog *connectDialog = nullptr;
+
+    void assignSlots();
+
 public:
     OstrichChat(QWidget *parent = 0);
     ~OstrichChat();
 
     void initialize();
 
-    void addChannel();
+private slots:
+    void generateChannelTab(const QString& channelName);
+    void destroyChannelTab(int tabSlot);
+    void launchConnectPopup();
 };
