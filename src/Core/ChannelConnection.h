@@ -1,31 +1,34 @@
 #pragma once
 
 #include <QtNetwork>
+#include "IRCMessage.h"
 
-class ChannelConnection : public QTcpSocket {
-    Q_OBJECT
+class ServerConnection;
+
+// Should this extend QObject?
+class ChannelConnection : public QObject {
+	Q_OBJECT
 
 private:
+    ServerConnection *parentSocket = nullptr;
     QString channelName;
-    QBuffer *bufferReader;
 
-    QRegularExpression channelMatch;
+	void assignSlots();
 
-    void assignSlots();
-    void writeQString(const QString& message);
+	// Sends commandString
+	void IRCSendMessage(const IRCMessage& message);
 public:
-    ChannelConnection(QObject *parent = 0);
+	ChannelConnection(const QString& channel, ServerConnection *parent = 0);
     ~ChannelConnection();
 
-    void connectToChannel(const QString& channel, const QString& user, const QString& oauth);
-    void disconnectFromChannel();
+	QString getChannelName() const;
 
-    void sendIRCMessage(const QString& message);
+	void channelJoin();
+	void channelLeave();
 
-private slots:
-    void analyseMessage();
-
+	void IRCSendString(const QString& string);// Generated IRCMessage from string to send
+	void IRCReceiveString(const QString& string);
 signals:
-    // TODO: Contain the message in a separate object
-    void messageReceived(const QString&);
+	void onMessageSent(const IRCMessage& string);
+	void onMessageReceived(const IRCMessage& string);
 };

@@ -19,7 +19,47 @@
   <property name="windowTitle">
    <string>OstrichChat</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="centralGridLayout">
+      <item row="0" column="0" alignment="Qt::AlignTop">
+       <widget class="QLabel" name="subtitleLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>You are not connected!</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <layout class="QGridLayout" name="subcontentGridLayout"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -36,7 +76,7 @@
     <property name="title">
      <string>OstrichChat</string>
     </property>
-    <addaction name="actionConnectToChannel"/>
+    <addaction name="actionTwitchConnect"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -46,24 +86,26 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>&amp;Settings</string>
+    </property>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuChannels">
+    <property name="title">
+     <string>Channels</string>
+    </property>
+    <addaction name="actionJoinChannel"/>
+   </widget>
    <addaction name="menuOstrichChat"/>
+   <addaction name="menuChannels"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
    <property name="iconText">
     <string>Exit</string>
@@ -74,12 +116,22 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
-  <action name="actionConnectToChannel">
+  <action name="actionTwitchConnect">
    <property name="text">
-    <string>Connect to Channel</string>
+    <string>&amp;Login to Twitch.tv</string>
+   </property>
+  </action>
+  <action name="actionJoinChannel">
+   <property name="text">
+    <string>&amp;Join A Channel</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>&amp;Options</string>
    </property>
   </action>
  </widget>

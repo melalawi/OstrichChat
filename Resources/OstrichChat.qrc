@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="OstrichChat">
+    <qresource prefix="/OstrichChat">
+        <file alias="twitchConnectButton">ui/twitchConnect.png</file>
     </qresource>
 </RCC>

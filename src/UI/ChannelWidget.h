@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "../Core/ChannelConnection.h"
+#include "../Core/ServerConnection.h"
 
 #include "ui_ChannelWidget.h"
 
@@ -17,13 +17,13 @@ private:
 
     void assignSlots();
 public:
-    ChannelWidget(const QString& channel, QWidget *parent = 0);
+	ChannelWidget(const QString& name, ChannelConnection *channel, QWidget *parent = 0);
     ~ChannelWidget();
 
-    void connectToChannel();
-    void disconnectFromChannel();
+    void channelJoin();
+    void channelLeave();
 
 private slots:
-    void sendMessage();
-    void receiveMessage(const QString& message);
+	void messageSend();
+	void addChatLine(const IRCMessage& message);
 };

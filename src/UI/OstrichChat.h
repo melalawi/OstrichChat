@@ -1,9 +1,12 @@
 #pragma once
 
 #include <QWidget>
+#include <vector>
+
 #include "ui_OstrichChat.h"
 
-#include "ConnectDialog.h"
+class ServerWidget;
+class ServerConnectDialog;
 
 class OstrichChat : public QMainWindow {
     Q_OBJECT
@@ -11,8 +14,8 @@ class OstrichChat : public QMainWindow {
 private:
     Ui::OstrichChatWindow ui;
 
-    QTabWidget *masterTabWidget = nullptr;
-    ConnectDialog *connectDialog = nullptr;
+    std::vector<ServerWidget*> serverWidgets;
+    ServerConnectDialog *twitchConnectDialog = nullptr;
 
     void assignSlots();
 
@@ -22,8 +25,13 @@ public:
 
     void initialize();
 
+	void setSubtitle(const QString& text);
+
 private slots:
-    void generateChannelTab(const QString& channelName);
-    void destroyChannelTab(int tabSlot);
-    void launchConnectPopup();
+    void twitchConnect();
+
+	void connectNewUser(const QString& user, const QString& oauth);
+	void disconnectUser(const QString& user);
+
+	void joinChannel();
 };

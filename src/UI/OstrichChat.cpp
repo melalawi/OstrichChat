@@ -1,20 +1,19 @@
 #include "OstrichChat.h"
 
-#include "ChannelWidget.h"
-#include "ConnectDialog.h"
+#include "ServerWidget.h"
+#include "ServerConnectDialog.h"
 
 OstrichChat::OstrichChat(QWidget *parent) : QMainWindow(parent) {
-    masterTabWidget = new QTabWidget;
-    masterTabWidget->setTabsClosable(true);
-
     ui.setupUi(this);
 
     assignSlots();
 }
 
 void OstrichChat::assignSlots() {
-    connect(masterTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(destroyChannelTab(int)));
-    connect(ui.actionConnectToChannel, SIGNAL(triggered()), this, SLOT(launchConnectPopup()));
+    connect(ui.actionTwitchConnect, SIGNAL(triggered()), this, SLOT(twitchConnect()));
+
+	//Temporary
+	connect(ui.actionJoinChannel, SIGNAL(triggered()), this, SLOT(joinChannel()));
 }
 
 OstrichChat::~OstrichChat() {
@@ -24,31 +23,44 @@ void OstrichChat::initialize() {
     show();
 }
 
-void OstrichChat::generateChannelTab(const QString& channelName) {
-    ChannelWidget *newChannel = new ChannelWidget(channelName);
+void OstrichChat::setSubtitle(const QString& text) {
+	QLabel *subtitle = ui.centralWidget->findChild<QLabel*>("subtitleLabel");
 
-    if (centralWidget() != masterTabWidget) {
-        this->setCentralWidget(masterTabWidget);
-    }
-
-    masterTabWidget->addTab(newChannel, channelName);
-
-    newChannel->connectToChannel();
+	subtitle->setText(text);
 }
 
-void OstrichChat::destroyChannelTab(int tabSlot) {
-    ChannelWidget *channelTab = static_cast<ChannelWidget*>(masterTabWidget->widget(tabSlot));
-
-    channelTab->disconnectFromChannel();
-
-    masterTabWidget->removeTab(tabSlot);
-}
-
-void OstrichChat::launchConnectPopup() {
-    connectDialog = new ConnectDialog(this);
+// Launches the Twitch Login Dialog
+void OstrichChat::twitchConnect() {
+    twitchConnectDialog = new ServerConnectDialog(this);
 
     //Assign the slot to the channel
-    connect(connectDialog, SIGNAL(connectToChannel(const QString&)), this, SLOT(generateChannelTab(const QString&)));
+	connect(twitchConnectDialog, SIGNAL(connectUser(const QString&, const QString&)), this, SLOT(connectNewUser(const QString&, const QString&)));
 
-    connectDialog->initialize();
+    twitchConnectDialog->initialize();
+}
+
+// Initializes a new server widget for this particular user, then login + connect happens
+// TODO: Check if this user is already connected
+void OstrichChat::connectNewUser(const QString& user, const QString& oauth) {
+	QGridLayout *gridLayout = ui.centralWidget->findChild<QGridLayout*>("subcontentGridLayout");
+	ServerWidget *nextServerWidget = new ServerWidget(user, this);
+
+	serverWidgets.push_back(nextServerWidget);
+
+	gridLayout->addWidget(nextServerWidget);
+
+	nextServerWidget->connectToServer(user, oauth);
+}
+
+// TODO
+void OstrichChat::disconnectUser(const QString& user) {
+
+}
+
+void OstrichChat::joinChannel() {
+	// TODO: Check if we're connected first
+	// TODO: Better way
+	if (serverWidgets.size()) {
+		serverWidgets.at(0)->connectToChannel("insentience");
+	}
 }

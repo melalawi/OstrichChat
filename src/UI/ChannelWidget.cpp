@@ -1,10 +1,11 @@
 #include "ChannelWidget.h"
 
 #include <QtNetwork>
+#include "../Core/ChannelConnection.h"
 
-ChannelWidget::ChannelWidget(const QString& channel, QWidget *parent) : QWidget(parent) {
-    channelName = channel;
-    channelConnection = new ChannelConnection(this);
+ChannelWidget::ChannelWidget(const QString& name, ChannelConnection *channel, QWidget *parent) : QWidget(parent) {
+	channelName = name;
+    channelConnection = channel;
 
     ui.setupUi(this);
 
@@ -17,30 +18,32 @@ ChannelWidget::~ChannelWidget() {
 
 void ChannelWidget::assignSlots() {
     //When the user wants to send a message
-    connect(ui.chatSubmitButton, SIGNAL(clicked()), this, SLOT(sendMessage()));
-    connect(ui.chatTextArea, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
+	connect(ui.chatSubmitButton, SIGNAL(clicked()), this, SLOT(messageSend()));
+	connect(ui.chatTextArea, SIGNAL(returnPressed()), this, SLOT(messageSend()));
 
-    connect(channelConnection, SIGNAL(messageReceived(const QString&)), this, SLOT(receiveMessage(const QString&)));
+	connect(channelConnection, SIGNAL(onMessageReceived(const IRCMessage&)), this, SLOT(addChatLine(const IRCMessage&)));
+	connect(channelConnection, SIGNAL(onMessageSent(const IRCMessage&)), this, SLOT(addChatLine(const IRCMessage&)));
 }
 
 
-void ChannelWidget::connectToChannel() {
-    channelConnection->connectToChannel(channelName, QString("Ostrich_Bot"), QString("oauth:hy2vnkk8hjwvs0ptwjikdor7kq7t68"));
+void ChannelWidget::channelJoin() {
+	channelConnection->channelJoin();
 }
 
-void ChannelWidget::disconnectFromChannel() {
-    channelConnection->disconnectFromChannel();
+void ChannelWidget::channelLeave() {
+	channelConnection->channelLeave();
 }
 
-void ChannelWidget::sendMessage() {
+// Slots
+void ChannelWidget::messageSend() {
     // TODO: Check if message is valid before sending
-    QString messageToSend = ui.chatTextArea->text();
+    QString text = ui.chatTextArea->text();
 
-    channelConnection->sendIRCMessage(messageToSend);
+	channelConnection->IRCSendString(text);
 
     ui.chatTextArea->clear();
 }
 
-void ChannelWidget::receiveMessage(const QString& message) {
-    ui.chatLines->append(message);
+void ChannelWidget::addChatLine(const IRCMessage& message) {
+    ui.chatLines->append(message.getDisplayString());
 }
