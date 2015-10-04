@@ -4,11 +4,13 @@
 #include <iostream>
 #include "OstrichChat.h"
 
+namespace Ostrich {
+
 // Flags: Keep dialog on top, prevent dialog from being resized
-const Qt::WindowFlags DIALOG_FLAGS = Qt::WindowStaysOnTopHint;// | ~Qt::WindowContextHelpButtonHint;
+const Qt::WindowFlags DIALOG_FLAGS = Qt::WindowStaysOnTopHint;// ^ ~Qt::WindowContextHelpButtonHint;
 
 ServerConnectDialog::ServerConnectDialog(QWidget *parent) : QDialog(parent) {
-    ui.setupUi(this);
+	ui.setupUi(this);
 
 	// TEMPORARY: auto-fills lines with manual credentials
 	ui.usernameLine->setText("Ostrich_Bot");
@@ -16,14 +18,13 @@ ServerConnectDialog::ServerConnectDialog(QWidget *parent) : QDialog(parent) {
 	ui.manualLoginButton->setEnabled(true);
 	// END TEMP
 
-    assignSlots();
+	assignSlots();
 }
 
-ServerConnectDialog::~ServerConnectDialog() {
-}
+ServerConnectDialog::~ServerConnectDialog() {}
 
 void ServerConnectDialog::assignSlots() {
-    // Only enable the manual login button when appropriate text is found in both the username and OAuth lines
+	// Only enable the manual login button when appropriate text is found in both the username and OAuth lines
 	connect(ui.usernameLine, SIGNAL(textChanged(const QString&)), this, SLOT(checkManualCredentials()));
 	connect(ui.oAuthTokenLine, SIGNAL(textChanged(const QString&)), this, SLOT(checkManualCredentials()));
 
@@ -33,19 +34,20 @@ void ServerConnectDialog::assignSlots() {
 }
 
 void ServerConnectDialog::initialize() {
-    show();
 
-	//setWindowFlags(DIALOG_FLAGS);
+	show();
 
-    setFixedSize(size().width(), size().height());
+	setWindowFlags(windowFlags() | DIALOG_FLAGS);
 
-    exec();
+	setFixedSize(size().width(), size().height());
+
+	exec();
 }
 
 // Simple check of both manual credential lines. If the 'wrong' info is found, then keep the login button disabled;
 void ServerConnectDialog::checkManualCredentials() {
 	QString username = ui.usernameLine->text(),
-			oauth = ui.oAuthTokenLine->text();
+		oauth = ui.oAuthTokenLine->text();
 
 	// TODO: Make this check more comprehensive
 	bool enableLogin = username.length() && oauth.length();
@@ -60,4 +62,7 @@ void ServerConnectDialog::on_manualLoginButton_clicked() {
 
 		close();
 	}
+}
+
+//namespace Ostrich
 }

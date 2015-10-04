@@ -6,6 +6,8 @@
 
 #include "../Core/ServerConnection.h"
 
+namespace Ostrich {
+
 // Set up a server widget: Display name, connection variables, closable tabs, etc
 ServerWidget::ServerWidget(const QString& username, OstrichChat *parent) : QTabWidget(parent) {
 	ui.setupUi(this);
@@ -58,4 +60,7 @@ void ServerWidget::closeChannelTab(int tabIndex) {
 	channelTab->channelLeave();
 
 	removeTab(tabIndex);
+}
+
+//namespace Ostrich
 }

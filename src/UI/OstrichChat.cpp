@@ -3,24 +3,25 @@
 #include "ServerWidget.h"
 #include "ServerConnectDialog.h"
 
-OstrichChat::OstrichChat(QWidget *parent) : QMainWindow(parent) {
-    ui.setupUi(this);
+namespace Ostrich {
 
-    assignSlots();
+OstrichChat::OstrichChat(QWidget *parent) : QMainWindow(parent) {
+	ui.setupUi(this);
+
+	assignSlots();
 }
 
 void OstrichChat::assignSlots() {
-    connect(ui.actionTwitchConnect, SIGNAL(triggered()), this, SLOT(twitchConnect()));
+	connect(ui.actionTwitchConnect, SIGNAL(triggered()), this, SLOT(twitchConnect()));
 
 	//Temporary
 	connect(ui.actionJoinChannel, SIGNAL(triggered()), this, SLOT(joinChannel()));
 }
 
-OstrichChat::~OstrichChat() {
-}
+OstrichChat::~OstrichChat() {}
 
 void OstrichChat::initialize() {
-    show();
+	show();
 }
 
 void OstrichChat::setSubtitle(const QString& text) {
@@ -31,12 +32,13 @@ void OstrichChat::setSubtitle(const QString& text) {
 
 // Launches the Twitch Login Dialog
 void OstrichChat::twitchConnect() {
-    twitchConnectDialog = new ServerConnectDialog(this);
+	twitchConnectDialog = new ServerConnectDialog(this);
 
-    //Assign the slot to the channel
+	//Assign the slot to the channel
 	connect(twitchConnectDialog, SIGNAL(connectUser(const QString&, const QString&)), this, SLOT(connectNewUser(const QString&, const QString&)));
 
-    twitchConnectDialog->initialize();
+
+	twitchConnectDialog->initialize();
 }
 
 // Initializes a new server widget for this particular user, then login + connect happens
@@ -63,4 +65,7 @@ void OstrichChat::joinChannel() {
 	if (serverWidgets.size()) {
 		serverWidgets.at(0)->connectToChannel("insentience");
 	}
+}
+
+//namespace Ostrich
 }

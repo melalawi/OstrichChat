@@ -3,6 +3,8 @@
 #include <QtNetwork>
 #include "IRCMessage.h"
 
+namespace Ostrich {
+
 class ServerConnection;
 
 // Should this extend QObject?
@@ -17,6 +19,7 @@ private:
 
 	// Sends commandString
 	void IRCSendMessage(const IRCMessage& message);
+
 public:
 	ChannelConnection(const QString& channel, ServerConnection *parent = 0);
     ~ChannelConnection();
@@ -28,7 +31,11 @@ public:
 
 	void IRCSendString(const QString& string);// Generated IRCMessage from string to send
 	void IRCReceiveString(const QString& string);
+
 signals:
 	void onMessageSent(const IRCMessage& string);
 	void onMessageReceived(const IRCMessage& string);
 };
+
+//namespace Ostrich
+}

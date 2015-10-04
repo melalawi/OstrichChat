@@ -2,6 +2,9 @@
 
 #include "ui_ServerWidget.h"
 
+namespace Ostrich {
+
+// Forward declarations
 class OstrichChat;
 class ServerConnection;
 
@@ -14,6 +17,7 @@ private:
 	ServerConnection *serverConnection;
 
 	void assignSlots();
+
 public:
 	ServerWidget(const QString& username, OstrichChat *parent);
 	~ServerWidget();
@@ -27,3 +31,6 @@ public:
 private slots:
 	void closeChannelTab(int tabIndex);
 };
+
+//namespace Ostrich
+}

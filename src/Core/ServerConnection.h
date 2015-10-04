@@ -5,6 +5,8 @@
 
 #include "IRCMessage.h"
 
+namespace Ostrich {
+
 class ChannelConnection;
 
 class ServerConnection : public QTcpSocket {
@@ -26,6 +28,7 @@ private:
 	void processInput(const QString& text);
 
 	int getChannelIndex(const QString& channelName);
+
 public:
     ServerConnection(QObject *parent = 0);
     ~ServerConnection();
@@ -49,3 +52,6 @@ private slots:
 public slots:
 	void onServerConnection();
 };
+
+//namespace Ostrich
+}

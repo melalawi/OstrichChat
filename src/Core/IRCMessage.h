@@ -2,8 +2,11 @@
 
 #include <array>
 #include <QByteArray>
+#include <QFlags>
 #include <QString>
 #include <QDateTime>
+
+namespace Ostrich {
 
 const std::array<QString, 7> IRC_VALID_TYPES = {
 	"NULLTYPE",
@@ -51,11 +54,13 @@ public:
 class IRCMessage {
 private:
 	IRCMessageType messageType;
-	QDateTime timestamp;
+	QFlag messageFlags;
 
 	QString rawString;
 	QString commandString;
 	QString displayString;
+
+	QDateTime timestamp;
 
 	QString sentBy;
 	QString message;
@@ -63,9 +68,12 @@ private:
 
 	void parseVariablesFromRaw();
 
+	void assignMessageFlags();
+
 	void update();
 	void buildCommandString();
 	void buildDisplayString();
+
 public:
 	IRCMessage(const QByteArray& raw);
 	IRCMessage(const QString& string);
@@ -83,4 +91,18 @@ public:
 
 	QString getCommandString() const;
 	QString getDisplayString() const;
+
+	// Message Flag options
+	enum MessageTypes {
+		ActionMessage = 1,
+		WhisperMessage = 2,
+		CommandSlashMessage = 4,
+		CommandExclamMessage = 8
+	};
+	Q_DECLARE_FLAGS(Options, MessageTypes)
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(IRCMessage::Options)
+
+//namespace Ostrich
+}

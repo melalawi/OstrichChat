@@ -4,6 +4,8 @@
 
 #include "ChannelConnection.h"
 
+namespace Ostrich {
+
 const QString TWITCH_HOST = "irc.twitch.tv";
 const int TWITCH_PORT = 6667;
 
@@ -12,15 +14,14 @@ ServerConnection::ServerConnection(QObject *parent) : QTcpSocket(parent) {
 	isConnected = false;
 	isLoggedIn = false;
 
-    assignSlots();
+	assignSlots();
 }
 
-ServerConnection::~ServerConnection() {
-}
+ServerConnection::~ServerConnection() {}
 
 void ServerConnection::assignSlots() {
 	// Processes any IRC input
-    connect(this, SIGNAL(readyRead()), this, SLOT(processReadyRead()));
+	connect(this, SIGNAL(readyRead()), this, SLOT(processReadyRead()));
 
 	// Fired when a successful connection to the server has been made
 	connect(this, SIGNAL(connected()), this, SLOT(onServerConnection()));
@@ -127,13 +128,13 @@ QString ServerConnection::getUser() const {
 
 // Private Slots
 void ServerConnection::processReadyRead() {
-    QByteArray next;
+	QByteArray next;
 
-    do {
+	do {
 		next = readLine();
 
 		processInput(QString(next));
-    } while (next.length());
+	} while (next.length());
 }
 
 // Send a received IRC Message to the appropriate channel
@@ -153,8 +154,11 @@ void ServerConnection::processInput(const QString& input) {
 }
 
 void ServerConnection::outputString(const QString& text) {
-    std::string stringified = text.toStdString() + "\r\n";
+	std::string stringified = text.toStdString() + "\r\n";
 
-    write(stringified.c_str());
-    flush();
+	write(stringified.c_str());
+	flush();
+}
+
+//namespace Ostrich
 }

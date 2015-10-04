@@ -2,6 +2,8 @@
 
 #include "ServerConnection.h"
 
+namespace Ostrich {
+
 ChannelConnection::ChannelConnection(const QString& channel, ServerConnection *parent) : QObject(parent) {
 	parentSocket = parent;
 	channelName = channel.toLower();
@@ -54,4 +56,7 @@ void ChannelConnection::IRCSendString(const QString& string) {
 
 QString ChannelConnection::getChannelName() const {
 	return channelName;
+}
+
+//namespace Ostrich
 }

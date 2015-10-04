@@ -67,6 +67,7 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout_2->setContentsMargins(2, 2, 2, 2);
         centralGridLayout = new QGridLayout();
         centralGridLayout->setSpacing(6);
         centralGridLayout->setObjectName(QStringLiteral("centralGridLayout"));

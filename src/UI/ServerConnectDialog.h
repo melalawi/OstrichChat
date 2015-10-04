@@ -4,23 +4,29 @@
 
 #include "ui_ServerConnectDialog.h"
 
+namespace Ostrich {
+
 class ServerConnectDialog : public QDialog {
-    Q_OBJECT
+	Q_OBJECT
 
 private:
-    Ui::ServerConnectDialog ui;
+	Ui::ServerConnectDialog ui;
 
-    void assignSlots();
+	void assignSlots();
+
 public:
-    ServerConnectDialog(QWidget *parent = 0);
-    ~ServerConnectDialog();
+	ServerConnectDialog(QWidget *parent = 0);
+	~ServerConnectDialog();
 
-    void initialize();
+	void initialize();
 
-private slots:
+	private slots:
 	void on_manualLoginButton_clicked();
-    void checkManualCredentials();
+	void checkManualCredentials();
 
 signals:
 	void connectUser(const QString& user, const QString& oauth);
 };
+
+//namespace Ostrich
+}

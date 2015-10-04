@@ -2,9 +2,9 @@
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[]) {
-    int exitCode = 0;
     QApplication application(argc, argv);
-    OstrichChat mainWindow;
+	Ostrich::OstrichChat mainWindow;
+	int exitCode = 0;
 
     mainWindow.initialize();
 

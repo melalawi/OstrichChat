@@ -5,33 +5,38 @@
 
 #include "ui_OstrichChat.h"
 
+namespace Ostrich {
+
 class ServerWidget;
 class ServerConnectDialog;
 
 class OstrichChat : public QMainWindow {
-    Q_OBJECT
+	Q_OBJECT
 
 private:
-    Ui::OstrichChatWindow ui;
+	Ui::OstrichChatWindow ui;
 
-    std::vector<ServerWidget*> serverWidgets;
-    ServerConnectDialog *twitchConnectDialog = nullptr;
+	std::vector<ServerWidget*> serverWidgets;
+	ServerConnectDialog *twitchConnectDialog = nullptr;
 
-    void assignSlots();
+	void assignSlots();
 
 public:
-    OstrichChat(QWidget *parent = 0);
-    ~OstrichChat();
+	OstrichChat(QWidget *parent = 0);
+	~OstrichChat();
 
-    void initialize();
+	void initialize();
 
 	void setSubtitle(const QString& text);
 
-private slots:
-    void twitchConnect();
+	private slots:
+	void twitchConnect();
 
 	void connectNewUser(const QString& user, const QString& oauth);
 	void disconnectUser(const QString& user);
 
 	void joinChannel();
 };
+
+//namespace Ostrich
+}

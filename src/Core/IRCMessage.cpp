@@ -3,24 +3,28 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
+namespace Ostrich {
+
 const QString JOIN_MESSAGE = "Welcome to #CHANNEL_NAME's chat room!";
 const QString PART_MESSAGE = "You have left #CHANNEL_NAME's chat room.";
 
 // This ugly regex will help us parse any received IRC message
 const QRegularExpression IRC_PROTOCOL_REGEX("^(?:[:](\\S+)!)(?:\\S+) (\\S+)(?: #(?!:)(.+?))?(?: [:](.+))?$");
 
+// This regex extracts a message from the /me specification if it exists
+const QRegularExpression IRC_ME_MESSAGE_PROTOCOL("(?:\1ACTION\\s)(.*)\1");
 // Parses IRCMessage from QString
-IRCMessage::IRCMessage(const QString& string) {
+IRCMessage::IRCMessage(const QString& string) : messageFlags(0) {
 	rawString = string;
 
 	parseVariablesFromRaw();
-	
+
 	update();
 }
 
 // Parses IRCMessage from byteArray
 // Simply transform the byteArray into a QString
-IRCMessage::IRCMessage(const QByteArray& raw) {
+IRCMessage::IRCMessage(const QByteArray& raw) : messageFlags(0) {
 	rawString = QString(raw);
 
 	parseVariablesFromRaw();
@@ -29,7 +33,7 @@ IRCMessage::IRCMessage(const QByteArray& raw) {
 }
 
 
-IRCMessage::IRCMessage(const QString& type, const QString& text) {
+IRCMessage::IRCMessage(const QString& type, const QString& text) : messageFlags(0) {
 	messageType = IRCMessageType(type);
 	message = text.simplified();
 
@@ -49,9 +53,23 @@ void IRCMessage::parseVariablesFromRaw() {
 
 		// Clean message of return carriages and excess whitespace
 		message = message.simplified();
+
+		assignMessageFlags();
 	}
 
 	timestamp = timestamp.currentDateTime();
+}
+
+// Assign the bit flags (ACTION, COMMAND, etc) to this IRCMessage
+void IRCMessage::assignMessageFlags() {
+	QRegularExpressionMatch meProtocol = IRC_ME_MESSAGE_PROTOCOL.match(message);
+
+	// Test if string starts with /me identifier
+	if (meProtocol.hasMatch()) {
+		messageFlags = messageFlags | ActionMessage;
+
+		message = meProtocol.captured(1);
+	}
 }
 
 // Called every time a member variable is changed
@@ -131,4 +149,7 @@ QString IRCMessage::getCommandString() const {
 
 QString IRCMessage::getDisplayString() const {
 	return displayString;
+}
+
+//namespace Ostrich
 }

@@ -3,13 +3,15 @@
 #include <QtNetwork>
 #include "../Core/ChannelConnection.h"
 
+namespace Ostrich {
+
 ChannelWidget::ChannelWidget(const QString& name, ChannelConnection *channel, QWidget *parent) : QWidget(parent) {
 	channelName = name;
-    channelConnection = channel;
+	channelConnection = channel;
 
-    ui.setupUi(this);
+	ui.setupUi(this);
 
-    assignSlots();
+	assignSlots();
 }
 
 ChannelWidget::~ChannelWidget() {
@@ -17,7 +19,7 @@ ChannelWidget::~ChannelWidget() {
 }
 
 void ChannelWidget::assignSlots() {
-    //When the user wants to send a message
+	//When the user wants to send a message
 	connect(ui.chatSubmitButton, SIGNAL(clicked()), this, SLOT(messageSend()));
 	connect(ui.chatTextArea, SIGNAL(returnPressed()), this, SLOT(messageSend()));
 
@@ -36,14 +38,17 @@ void ChannelWidget::channelLeave() {
 
 // Slots
 void ChannelWidget::messageSend() {
-    // TODO: Check if message is valid before sending
-    QString text = ui.chatTextArea->text();
+	// TODO: Check if message is valid before sending
+	QString text = ui.chatTextArea->text();
 
 	channelConnection->IRCSendString(text);
 
-    ui.chatTextArea->clear();
+	ui.chatTextArea->clear();
 }
 
 void ChannelWidget::addChatLine(const IRCMessage& message) {
-    ui.chatLines->append(message.getDisplayString());
+	ui.chatLines->append(message.getDisplayString());
+}
+
+//namespace Ostrich
 }
