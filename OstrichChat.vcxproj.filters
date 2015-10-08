@@ -73,9 +73,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI\OstrichChat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\UI\ChannelWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\IRCMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\OstrichChat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

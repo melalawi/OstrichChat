@@ -3,6 +3,7 @@
 #include <array>
 #include <QByteArray>
 #include <QFlags>
+#include <QHash>
 #include <QString>
 #include <QDateTime>
 
@@ -56,41 +57,30 @@ private:
 	IRCMessageType messageType;
 	QFlag messageFlags;
 
-	QString rawString;
-	QString commandString;
-	QString displayString;
+	QHash<QString, QString> cVariables;
 
-	QDateTime timestamp;
+	QString commString;
+	QString dispString;
 
 	QString sentBy;
 	QString message;
 	QString channelName;
-
-	void parseVariablesFromRaw();
+	QDateTime timestamp;
 
 	void assignMessageFlags();
 
-	void update();
-	void buildCommandString();
-	void buildDisplayString();
-
+	QString buildString(const QHash<QString, QString>& list) const;
 public:
-	IRCMessage(const QByteArray& raw);
-	IRCMessage(const QString& string);
-	IRCMessage(const QString& type, const QString& text);
+	IRCMessage();
+	IRCMessage(IRCMessageType type);
 
-	void setChannel(const QString& channel);
-	void setMessage(const QString& newMessage);
-	void setSentBy(const QString& who);
+	void assignVariable(const QString& varName, const QString& varValue);
+	QString getVariableValue(const QString& varName) const;
 
-	QString getMessageType() const;
-	QDateTime getTimeStamp() const;
-	QString getMessage() const;
-	QString getSentBy() const;
-	QString getChannel() const;
+	void updateInternalVariables();
 
-	QString getCommandString() const;
-	QString getDisplayString() const;
+	QString commandString() const;
+	QString displayString() const;
 
 	// Message Flag options
 	enum MessageTypes {
@@ -103,6 +93,9 @@ public:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(IRCMessage::Options)
+
+IRCMessage parseIncomingIRCMessage(const QString& text);
+IRCMessage generateIRCMessage(const QString& type, const QString& message = "", const QString& user = "", const QString& channel = "");
 
 //namespace Ostrich
 }

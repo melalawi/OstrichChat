@@ -16,10 +16,6 @@ private:
     QString channelName;
 
 	void assignSlots();
-
-	// Sends commandString
-	void IRCSendMessage(const IRCMessage& message);
-
 public:
 	ChannelConnection(const QString& channel, ServerConnection *parent = 0);
     ~ChannelConnection();
@@ -29,12 +25,22 @@ public:
 	void channelJoin();
 	void channelLeave();
 
-	void IRCSendString(const QString& string);// Generated IRCMessage from string to send
-	void IRCReceiveString(const QString& string);
+	// Only called by widget, chat line contents go here
+	void sendPRIVMSG(const QString& string);
+
+	void IRCSendMessage(IRCMessage message);// Generated IRCMessage from string to send
+	void IRCReceiveMessage(const IRCMessage& message);
+
+	// Does not display the message in chat
+	void IRCSendSilent(IRCMessage message);
 
 signals:
-	void onMessageSent(const IRCMessage& string);
-	void onMessageReceived(const IRCMessage& string);
+	void messageSentSignal(const IRCMessage& message);
+	void messageReceivedSignal(const IRCMessage& message);
+
+	// QString-only variants for above fire at the same time, for widgets to use (best not to tell widgets about IRCMessage object
+	void lineSentSignal(const QString& line);
+	void lineReceivedSignal(const QString& line);
 };
 
 //namespace Ostrich

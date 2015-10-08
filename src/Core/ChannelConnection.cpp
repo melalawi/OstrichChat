@@ -1,6 +1,7 @@
 #include "ChannelConnection.h"
 
 #include "ServerConnection.h"
+#include "IRCMessage.h"
 
 namespace Ostrich {
 
@@ -17,41 +18,61 @@ void ChannelConnection::assignSlots() {}
 
 void ChannelConnection::channelJoin() {
 	if (parentSocket) {
+		IRCMessage join = generateIRCMessage("JOIN");
+
+		join.assignVariable("channel", channelName);
+
+		// TODO: REMOVE, BAD
+		join.updateInternalVariables();
+
 		// TODO: Only if connection established
-		IRCSendMessage(IRCMessage("JOIN", channelName));
+		IRCSendSilent(join);
 	}
 }
 
 void ChannelConnection::channelLeave() {
 	if (parentSocket) {
-		IRCSendMessage(IRCMessage("PART", channelName));
+		IRCMessage part = generateIRCMessage("PART");
 
-		parentSocket->removeChannel(this);
+		part.assignVariable("channel", channelName);
+
+		// TODO: REMOVE, BAD
+		part.updateInternalVariables();
+
+		IRCSendSilent(part);
+
+		// TODO: Only when PART succeeds
+		parentSocket->removeChannelConnection(this);
 	}
 }
 
-void ChannelConnection::IRCSendMessage(const IRCMessage& message) {
-	parentSocket->outputString(message.getCommandString());
-
-	emit onMessageSent(message);
-}
-
-// Emit appropriate receive signal (UI updating)
-void ChannelConnection::IRCReceiveString(const QString& string) {
-	emit onMessageReceived(IRCMessage(string));
-}
-
-// Emit appropriate send signal (ServerConnection updating)
-void ChannelConnection::IRCSendString(const QString& string) {
+void ChannelConnection::sendPRIVMSG(const QString& string) {
 	if (parentSocket) {
 		QString user = parentSocket->getUser();
+		IRCMessage message = generateIRCMessage("PRIVMSG", string, user, channelName);
 
-		IRCMessage message("PRIVMSG", string);
-		message.setChannel(channelName);
-		message.setSentBy(user);
+		// TODO: Change, as having to call this with every message is bad and contrived
+		message.updateInternalVariables();
 
 		IRCSendMessage(message);
 	}
+}
+
+// Emit appropriate receive signal (UI updating)
+void ChannelConnection::IRCReceiveMessage(const IRCMessage& message) {
+	emit messageReceivedSignal(message);
+	emit lineReceivedSignal(message.displayString());
+}
+
+// Emit appropriate send signal (ServerConnection updating)
+void ChannelConnection::IRCSendMessage(IRCMessage message) {
+	emit messageSentSignal(message);
+	emit lineSentSignal(message.displayString());
+}
+
+// Silent sending, without calling lineSentSignal
+void ChannelConnection::IRCSendSilent(IRCMessage message) {
+	emit messageSentSignal(message);
 }
 
 QString ChannelConnection::getChannelName() const {

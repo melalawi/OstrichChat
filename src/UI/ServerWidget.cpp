@@ -39,7 +39,7 @@ void ServerWidget::disconnectFromServer() {
 // TODO: Check if Server is connected first
 //		 Check if channel exists.
 void ServerWidget::connectToChannel(const QString& channelName) {
-	ChannelConnection *newChannel = serverConnection->addChannel(channelName);
+	ChannelConnection *newChannel = serverConnection->addChannelConnection(channelName);
 	ChannelWidget *newWidget = new ChannelWidget(channelName, newChannel, this);
 
 	newWidget->channelJoin();

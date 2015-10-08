@@ -36,15 +36,21 @@ void ServerConnection::twitchConnect(const QString& user, const QString& oauth) 
 }
 
 void ServerConnection::onServerConnection() {
-	IRCMessage oAuthInput("PASS", oAuthToken);
-	IRCMessage userInput("NICK", username);
+	IRCMessage oAuthInput = generateIRCMessage("PASS", oAuthToken);
+	IRCMessage userInput = generateIRCMessage("NICK");
+
+	userInput.assignVariable("user", username);
 
 	// We have connected to the server, wait for login
 	isConnected = true;
 
+	// TODO: REMOVE, BAD, CONTRIVED
+	oAuthInput.updateInternalVariables();
+	userInput.updateInternalVariables();
+
 	// Send login information through IRC
-	outputString(oAuthInput.getCommandString());
-	outputString(userInput.getCommandString());
+	outputString(oAuthInput.commandString());
+	outputString(userInput.commandString());
 
 	// TODO: Wait for response before setting bool
 	isLoggedIn = true;
@@ -57,7 +63,7 @@ void ServerConnection::twitchDisconnect() {
 	isLoggedIn = false;
 }
 
-ChannelConnection *ServerConnection::addChannel(const QString& channelName) {
+ChannelConnection *ServerConnection::addChannelConnection(const QString& channelName) {
 	ChannelConnection *newChannel = nullptr;
 
 	// Only attempt this if we're connected and stuff
@@ -68,6 +74,9 @@ ChannelConnection *ServerConnection::addChannel(const QString& channelName) {
 	} else {
 		newChannel = new ChannelConnection(channelName, this);
 
+		// Connect to its send signal
+		connect(newChannel, SIGNAL(messageSentSignal(const IRCMessage&)), this, SLOT(sendMessageSlot(const IRCMessage&)));
+
 		// TODO: Channel validity check
 		channels.push_back(newChannel);
 	}
@@ -76,7 +85,7 @@ ChannelConnection *ServerConnection::addChannel(const QString& channelName) {
 }
 
 // Loop through all channels, find matching channel name, remove it from the vector
-void ServerConnection::removeChannel(const QString& channelName) {
+void ServerConnection::removeChannelConnection(const QString& channelName) {
 	int channelIndex = getChannelIndex(channelName);
 
 	if (channelIndex != -1) {
@@ -84,7 +93,7 @@ void ServerConnection::removeChannel(const QString& channelName) {
 	}
 }
 
-void ServerConnection::removeChannel(ChannelConnection *purge) {
+void ServerConnection::removeChannelConnection(ChannelConnection *purge) {
 	if (purge) {
 		int channelIndex = getChannelIndex(purge->getChannelName());
 
@@ -95,7 +104,7 @@ void ServerConnection::removeChannel(ChannelConnection *purge) {
 }
 
 // Retrieve the channel with the specified name (if it exists, otherwise returns nullptr)
-ChannelConnection *ServerConnection::getChannel(const QString& channelName) {
+ChannelConnection *ServerConnection::getChannelConnection(const QString& channelName) {
 	ChannelConnection *result = nullptr;
 	int channelIndex = getChannelIndex(channelName);
 
@@ -127,6 +136,10 @@ QString ServerConnection::getUser() const {
 }
 
 // Private Slots
+void ServerConnection::sendMessageSlot(const IRCMessage& message) {
+	outputString(message.commandString());
+}
+
 void ServerConnection::processReadyRead() {
 	QByteArray next;
 
@@ -139,16 +152,15 @@ void ServerConnection::processReadyRead() {
 
 // Send a received IRC Message to the appropriate channel
 void ServerConnection::processInput(const QString& input) {
-	IRCMessage message(input);
-	QString channelName = message.getChannel();
+	IRCMessage message = parseIncomingIRCMessage(input);
+	QString channelName = message.getVariableValue("channel");
 	ChannelConnection *channel = nullptr;
 
 	if (channelName.length()) {
-		channel = getChannel(channelName);
+		channel = getChannelConnection(channelName);
 
 		if (channel) {
-			// Inefficient (converting back and forth)
-			channel->IRCReceiveString(input);
+			channel->IRCReceiveMessage(message);
 		}
 	}
 }

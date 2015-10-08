@@ -1,6 +1,7 @@
 #include "ChannelWidget.h"
 
 #include <QtNetwork>
+
 #include "../Core/ChannelConnection.h"
 
 namespace Ostrich {
@@ -23,8 +24,8 @@ void ChannelWidget::assignSlots() {
 	connect(ui.chatSubmitButton, SIGNAL(clicked()), this, SLOT(messageSend()));
 	connect(ui.chatTextArea, SIGNAL(returnPressed()), this, SLOT(messageSend()));
 
-	connect(channelConnection, SIGNAL(onMessageReceived(const IRCMessage&)), this, SLOT(addChatLine(const IRCMessage&)));
-	connect(channelConnection, SIGNAL(onMessageSent(const IRCMessage&)), this, SLOT(addChatLine(const IRCMessage&)));
+	connect(channelConnection, SIGNAL(lineReceivedSignal(const QString&)), this, SLOT(onNewChatLineSlot(const QString&)));
+	connect(channelConnection, SIGNAL(lineSentSignal(const QString&)), this, SLOT(onNewChatLineSlot(const QString&)));
 }
 
 
@@ -38,16 +39,19 @@ void ChannelWidget::channelLeave() {
 
 // Slots
 void ChannelWidget::messageSend() {
-	// TODO: Check if message is valid before sending
-	QString text = ui.chatTextArea->text();
+	// TODO: Check if message is valid before sending (not sending blanks)
+	QString stringToSend = ui.chatTextArea->text().simplified();
 
-	channelConnection->IRCSendString(text);
+	if (stringToSend.length() > 0) {
+		channelConnection->sendPRIVMSG(stringToSend);
 
-	ui.chatTextArea->clear();
+		ui.chatTextArea->clear();
+	}
 }
 
-void ChannelWidget::addChatLine(const IRCMessage& message) {
-	ui.chatLines->append(message.getDisplayString());
+// Called whenever a new line of chat is received
+void ChannelWidget::onNewChatLineSlot(const QString& line) {
+	ui.chatLines->append(line);
 }
 
 //namespace Ostrich

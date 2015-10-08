@@ -7,8 +7,7 @@
 namespace Ostrich {
 
 // Forward declarations
-class ChannelConnection; 
-class IRCMessage;
+class ChannelConnection;
 
 class ChannelWidget : public QWidget {
 	Q_OBJECT
@@ -28,9 +27,13 @@ public:
 	void channelJoin();
 	void channelLeave();
 
+signals:
+	void processStringForOutput(const QString& text);
+
 private slots:
 	void messageSend();
-	void addChatLine(const IRCMessage& message);
+	void onNewChatLineSlot(const QString& line);
+
 };
 
 //namespace Ostrich

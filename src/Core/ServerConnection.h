@@ -36,10 +36,10 @@ public:
 	void twitchConnect(const QString& user, const QString& oauth);
 	void twitchDisconnect();
 
-	void removeChannel(ChannelConnection *purge);
-	void removeChannel(const QString& channelName);
-	ChannelConnection *addChannel(const QString& channelName);
-	ChannelConnection *getChannel(const QString& channelName);
+	void removeChannelConnection(ChannelConnection *purge);
+	void removeChannelConnection(const QString& channelName);
+	ChannelConnection *addChannelConnection(const QString& channelName);
+	ChannelConnection *getChannelConnection(const QString& channelName);
 
 	QString getUser() const;
 
@@ -47,6 +47,7 @@ public:
 	void outputString(const QString& text);
 
 private slots:
+	void sendMessageSlot(const IRCMessage& message);
 	void processReadyRead();
 
 public slots:

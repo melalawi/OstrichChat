@@ -142,8 +142,8 @@
     <ClCompile Include="src\Core\ServerConnection.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\UI\ChannelWidget.cpp" />
-    <ClCompile Include="src\UI\ServerConnectDialog.cpp" />
     <ClCompile Include="src\UI\OstrichChat.cpp" />
+    <ClCompile Include="src\UI\ServerConnectDialog.cpp" />
     <ClCompile Include="src\UI\ServerWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
