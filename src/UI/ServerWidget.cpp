@@ -2,7 +2,7 @@
 
 #include <QtWidgets>
 #include "OstrichChat.h"
-#include "ChannelWidget.h"
+#include "ChannelFrame.h"
 
 #include "../Core/ServerConnection.h"
 
@@ -40,7 +40,7 @@ void ServerWidget::disconnectFromServer() {
 //		 Check if channel exists.
 void ServerWidget::connectToChannel(const QString& channelName) {
 	ChannelConnection *newChannel = serverConnection->addChannelConnection(channelName);
-	ChannelWidget *newWidget = new ChannelWidget(channelName, newChannel, this);
+	ChannelFrame *newWidget = new ChannelFrame(channelName, newChannel, this);
 
 	newWidget->channelJoin();
 
@@ -55,7 +55,7 @@ void ServerWidget::disconnectFromChannel(const QString& channelName) {
 }
 
 void ServerWidget::closeChannelTab(int tabIndex) {
-	ChannelWidget *channelTab = static_cast<ChannelWidget*>(widget(tabIndex));
+	ChannelFrame *channelTab = static_cast<ChannelFrame*>(widget(tabIndex));
 
 	channelTab->channelLeave();
 

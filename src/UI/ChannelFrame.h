@@ -1,28 +1,30 @@
 #pragma once
 
-#include <QWidget>
+#include "ui_ChannelFrame.h"
 
-#include "ui_ChannelWidget.h"
+#include <QListWidget>
 
 namespace Ostrich {
 
 // Forward declarations
 class ChannelConnection;
 
-class ChannelWidget : public QWidget {
+class ChannelFrame : public QFrame {
 	Q_OBJECT
 
 private:
-	Ui::ChannelWidget ui;
+	Ui::ChannelFrame ui;
+	QListWidget *chatList;
+	QListWidget *userList;
 
 	QString channelName;
 	ChannelConnection *channelConnection;
 
+	void setupUI();
 	void assignSlots();
-
 public:
-	ChannelWidget(const QString& name, ChannelConnection *channel, QWidget *parent = 0);
-	~ChannelWidget();
+	ChannelFrame(const QString& name, ChannelConnection *channel, QWidget *parent = 0);
+	~ChannelFrame();
 
 	void channelJoin();
 	void channelLeave();
