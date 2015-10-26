@@ -1,23 +1,30 @@
 #pragma once
 
+#include <QStyledItemDelegate>
+#include <QTextDocument>
+#include <QPainter>
+#include <QObject>
 #include <QTime>
 #include <QString>
 
-#include "ui_ChatLine.h"
-
 namespace Ostrich {
 
-class ChatLine : public QFrame {
+class ChatLine : public QStyledItemDelegate {
 	Q_OBJECT
 
 private:
-	Ui::ChatLine ui;
-
-	void assignSlots();
+	QTextOption *textOption;
+	QTextDocument *document;
 
 public:
-	ChatLine(const QTime& time, const QString& user, const QString& message, QFrame *parent = 0);
+	// Explicit constructor: No implicit conversions of parameters are made
+	// If you don't give the constructor exactly what it wants, it yells at you
+	explicit ChatLine(QObject *parent = 0);
 	~ChatLine();
+
+	// Virtual functions specified by Qt
+	void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 };
 

@@ -19,7 +19,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -28,16 +27,14 @@ class Ui_ChannelFrame
 {
 public:
     QGridLayout *channelFrameLayout;
-    QHBoxLayout *headerContainer;
-    QLabel *channelTitleLabel;
+    QHBoxLayout *footerContainer;
+    QPushButton *someButton;
+    QPushButton *chatSubmitButton;
     QHBoxLayout *bodyContainer;
     QWidget *bodyWidget;
     QHBoxLayout *bodyWidgetLayout;
-    QHBoxLayout *footerContainer;
-    QHBoxLayout *horizontalLayout;
-    QTextEdit *chatTextEdit;
-    QPushButton *someButton;
-    QPushButton *chatSubmitButton;
+    QHBoxLayout *headerContainer;
+    QLabel *channelTitleLabel;
 
     void setupUi(QFrame *ChannelFrame)
     {
@@ -49,20 +46,30 @@ public:
         channelFrameLayout = new QGridLayout(ChannelFrame);
         channelFrameLayout->setObjectName(QStringLiteral("channelFrameLayout"));
         channelFrameLayout->setContentsMargins(-1, -1, 7, -1);
-        headerContainer = new QHBoxLayout();
-        headerContainer->setObjectName(QStringLiteral("headerContainer"));
-        channelTitleLabel = new QLabel(ChannelFrame);
-        channelTitleLabel->setObjectName(QStringLiteral("channelTitleLabel"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        footerContainer = new QHBoxLayout();
+        footerContainer->setObjectName(QStringLiteral("footerContainer"));
+        someButton = new QPushButton(ChannelFrame);
+        someButton->setObjectName(QStringLiteral("someButton"));
+        someButton->setEnabled(true);
+        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(channelTitleLabel->sizePolicy().hasHeightForWidth());
-        channelTitleLabel->setSizePolicy(sizePolicy);
+        sizePolicy.setHeightForWidth(someButton->sizePolicy().hasHeightForWidth());
+        someButton->setSizePolicy(sizePolicy);
+        someButton->setMaximumSize(QSize(48, 48));
 
-        headerContainer->addWidget(channelTitleLabel);
+        footerContainer->addWidget(someButton);
+
+        chatSubmitButton = new QPushButton(ChannelFrame);
+        chatSubmitButton->setObjectName(QStringLiteral("chatSubmitButton"));
+        sizePolicy.setHeightForWidth(chatSubmitButton->sizePolicy().hasHeightForWidth());
+        chatSubmitButton->setSizePolicy(sizePolicy);
+        chatSubmitButton->setMaximumSize(QSize(48, 48));
+
+        footerContainer->addWidget(chatSubmitButton);
 
 
-        channelFrameLayout->addLayout(headerContainer, 0, 0, 1, 1);
+        channelFrameLayout->addLayout(footerContainer, 3, 0, 1, 1);
 
         bodyContainer = new QHBoxLayout();
         bodyContainer->setSpacing(0);
@@ -84,48 +91,20 @@ public:
 
         channelFrameLayout->addLayout(bodyContainer, 1, 0, 1, 1);
 
-        footerContainer = new QHBoxLayout();
-        footerContainer->setObjectName(QStringLiteral("footerContainer"));
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        chatTextEdit = new QTextEdit(ChannelFrame);
-        chatTextEdit->setObjectName(QStringLiteral("chatTextEdit"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        headerContainer = new QHBoxLayout();
+        headerContainer->setObjectName(QStringLiteral("headerContainer"));
+        channelTitleLabel = new QLabel(ChannelFrame);
+        channelTitleLabel->setObjectName(QStringLiteral("channelTitleLabel"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Minimum);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(chatTextEdit->sizePolicy().hasHeightForWidth());
-        chatTextEdit->setSizePolicy(sizePolicy2);
-        chatTextEdit->setMinimumSize(QSize(0, 0));
-        chatTextEdit->setMaximumSize(QSize(16777215, 32));
-        chatTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        chatTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        chatTextEdit->setAcceptRichText(false);
+        sizePolicy2.setHeightForWidth(channelTitleLabel->sizePolicy().hasHeightForWidth());
+        channelTitleLabel->setSizePolicy(sizePolicy2);
 
-        horizontalLayout->addWidget(chatTextEdit);
-
-        someButton = new QPushButton(ChannelFrame);
-        someButton->setObjectName(QStringLiteral("someButton"));
-        someButton->setEnabled(true);
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(someButton->sizePolicy().hasHeightForWidth());
-        someButton->setSizePolicy(sizePolicy3);
-
-        horizontalLayout->addWidget(someButton);
-
-        chatSubmitButton = new QPushButton(ChannelFrame);
-        chatSubmitButton->setObjectName(QStringLiteral("chatSubmitButton"));
-        sizePolicy3.setHeightForWidth(chatSubmitButton->sizePolicy().hasHeightForWidth());
-        chatSubmitButton->setSizePolicy(sizePolicy3);
-
-        horizontalLayout->addWidget(chatSubmitButton);
+        headerContainer->addWidget(channelTitleLabel);
 
 
-        footerContainer->addLayout(horizontalLayout);
-
-
-        channelFrameLayout->addLayout(footerContainer, 2, 0, 1, 1);
+        channelFrameLayout->addLayout(headerContainer, 0, 0, 1, 1);
 
 
         retranslateUi(ChannelFrame);
@@ -136,10 +115,9 @@ public:
     void retranslateUi(QFrame *ChannelFrame)
     {
         ChannelFrame->setWindowTitle(QApplication::translate("ChannelFrame", "ChannelFrame", 0));
-        channelTitleLabel->setText(QApplication::translate("ChannelFrame", "#title", 0));
-        chatTextEdit->setPlaceholderText(QString());
         someButton->setText(QApplication::translate("ChannelFrame", "?", 0));
         chatSubmitButton->setText(QApplication::translate("ChannelFrame", "Chat", 0));
+        channelTitleLabel->setText(QApplication::translate("ChannelFrame", "#title", 0));
     } // retranslateUi
 
 };

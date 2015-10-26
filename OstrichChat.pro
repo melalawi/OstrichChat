@@ -17,3 +17,4 @@ MOC_DIR += ./GeneratedFiles/debug
 OBJECTS_DIR += debug
 UI_DIR += ./Forms
 RCC_DIR += ./Resources
+RESOURCES += ./Resources/OstrichChat.qrc

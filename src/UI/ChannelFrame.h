@@ -8,14 +8,19 @@ namespace Ostrich {
 
 // Forward declarations
 class ChannelConnection;
+class ChatSubmitBox;
+class ChatList;
+class UserList;
 
 class ChannelFrame : public QFrame {
 	Q_OBJECT
 
 private:
 	Ui::ChannelFrame ui;
-	QListWidget *chatList;
-	QListWidget *userList;
+
+	ChatList *chatList;
+	UserList *userList;
+	ChatSubmitBox *chatBox;
 
 	QString channelName;
 	ChannelConnection *channelConnection;
@@ -34,8 +39,6 @@ signals:
 
 private slots:
 	void messageSend();
-	void onNewChatLineSlot(const QString& line);
-
 };
 
 //namespace Ostrich
